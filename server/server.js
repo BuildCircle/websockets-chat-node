@@ -28,16 +28,9 @@ wsServer.on('request', function(request) {
     const connection = request.accept(null, request.origin);
     clients[userID] = connection;
     console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))
-    console.log()
 
     sendMessage(JSON.stringify({message: text}))
 
-    // connection.on('open', function(message) {
-    //     console.log('connection opened!')
-    // })
-    connection.onopen = function(event) {
-        console.log("WebSocket is open now.");
-      };      
     connection.on('message', function(message) {
         msg = JSON.parse(message.utf8Data).message
         text = msg

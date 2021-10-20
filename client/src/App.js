@@ -42,7 +42,6 @@ class App extends Component {
         <textarea 
         value={this.state.text} 
         onChange={(e) => this.onEditorStateChange(e)}
-        // onChange={this.onEditorStateChange}
         >
           {this.state.text}
         </textarea>

@@ -9,6 +9,7 @@ const wsServer = new webSocketServer({
 });
 
 const clients = {};
+let text = '';
 
 const getUniqueID = () => {
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -27,9 +28,19 @@ wsServer.on('request', function(request) {
     const connection = request.accept(null, request.origin);
     clients[userID] = connection;
     console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))
+    console.log()
+
+    sendMessage(JSON.stringify({message: text}))
+
+    // connection.on('open', function(message) {
+    //     console.log('connection opened!')
+    // })
+    connection.onopen = function(event) {
+        console.log("WebSocket is open now.");
+      };      
     connection.on('message', function(message) {
         msg = JSON.parse(message.utf8Data).message
-        // console.log(msg)
+        text = msg
         sendMessage(JSON.stringify({message: msg}))
     })
 });

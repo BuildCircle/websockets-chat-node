@@ -12,6 +12,7 @@ class App extends Component {
     this.state = {
       text: "a",
       user: null,
+      users: [],
       userSubmitted: false,
     };
   }
@@ -21,8 +22,14 @@ class App extends Component {
       console.log("WebSocket Client Connected");
     };
     client.onmessage = (message) => {
-      const state = JSON.parse(message.data).message;
-      this.setState({ text: state });
+      const object = JSON.parse(message.data);
+      if (object.type === "content change") {
+        const stateUpdate = object.message;
+        this.setState({ text: stateUpdate });
+      } else if (object.type === "user login") {
+        const stateUpdate = object.users;
+        this.setState({ users: stateUpdate });
+      }
     };
   }
 
@@ -39,7 +46,7 @@ class App extends Component {
 
   submitUser = (e) => {
     e.preventDefault();
-    this.setState({userSubmitted: true})
+    this.setState({ userSubmitted: true });
     client.send(
       JSON.stringify({
         type: "user login",
@@ -52,12 +59,17 @@ class App extends Component {
     if (this.state.userSubmitted) {
       return (
         <div>
-          <textarea
-            value={this.state.text}
-            onChange={(e) => this.onEditorStateChange(e)}
-          >
-            {this.state.text}
-          </textarea>
+          <div>
+            <textarea
+              value={this.state.text}
+              onChange={(e) => this.onEditorStateChange(e)}
+            >
+              {this.state.text}
+            </textarea>
+          </div>
+          {this.users?.map((user) => {
+            <p>{user}</p>;
+          })}
         </div>
       );
     } else {

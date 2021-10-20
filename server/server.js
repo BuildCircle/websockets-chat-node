@@ -29,6 +29,7 @@ wsServer.on('request', function(request) {
     console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))
     connection.on('message', function(message) {
         msg = JSON.parse(message.utf8Data).message
+        // console.log(msg)
         sendMessage(JSON.stringify({message: msg}))
     })
 });

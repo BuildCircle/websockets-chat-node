@@ -15,11 +15,20 @@ const getUniqueID = () => {
     return s4() + s4() + '-' + s4();
 };
 
+const sendMessage = (json) => {
+    Object.keys(clients).map((client) => {
+        clients[client].sendUTF(json);
+    });
+}  
+
 wsServer.on('request', function(request) {
     var userID = getUniqueID();
     console.log((new Date()) + ' Recieved a new connection from origin ' + request.origin + '.');
-    // You can rewrite this part of the code to accept only the requests from allowed origin
     const connection = request.accept(null, request.origin);
     clients[userID] = connection;
     console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))
+    connection.on('message', function(message) {
+        msg = JSON.parse(message.utf8Data).message
+        sendMessage(JSON.stringify({message: msg}))
+    })
 });

@@ -21,7 +21,7 @@ const sendMessage = (json) => {
     Object.keys(clients).map((client) => {
         clients[client].sendUTF(json);
     });
-}  
+}
 
 wsServer.on('request', function(request) {
     var userID = getUniqueID();

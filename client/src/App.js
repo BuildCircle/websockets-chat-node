@@ -85,23 +85,6 @@ class App extends Component {
       );
     }
   }
-}
+};
 
 export default App;
-// {/* <button onClick={() => this.buttonClick()}>Press me</button>
-// <p>{this.state.data}</p> */}
-
-{
-  /* <form className=“form” onSubmit={onSubmit}>
-        <div className=“form-group”>
-          <input
-            type=“email”
-            placeholder=“Email Address”
-            name=“email”
-            value={email}
-            onChange={onChange}
-          />
-        </div>
-        <input type=“submit” className=“btn btn-black” value=“Login” />
-      </form> */
-}

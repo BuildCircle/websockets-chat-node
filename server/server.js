@@ -10,7 +10,7 @@ const wsServer = new webSocketServer({
 
 const clients = {};
 let text = '';
-let users = [];
+let users = {};
 
 const getUniqueID = () => {
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -31,16 +31,22 @@ wsServer.on('request', function(request) {
     console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))
 
     sendMessage(JSON.stringify({message: text}))
-    // sendMessage(JSON.stringify({message: text}))
 
     connection.on('message', function(message) {
         object = JSON.parse(message.utf8Data)
         if (object.type === 'user login') {
-            users.push(object.username)
-            sendMessage(JSON.stringify({users: users, type: 'user login'}))
+            users[userID] = object.username
+            sendMessage(JSON.stringify({users: Object.values(users), type: 'user login'}))
         } else if (object.type === 'content change') {
             text = object.message
             sendMessage(JSON.stringify({message: text, type: 'content change'}))
         }
     })
+
+    connection.on('close', function(connection) {
+        console.log((new Date()) + " Peer " + userID + " disconnected.");
+        delete clients[userID];
+        delete users[userID];
+        sendMessage(JSON.stringify({users: Object.values(users), type: 'user login'}));
+     });
 });

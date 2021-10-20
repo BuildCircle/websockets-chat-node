@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 
-import React, { Component, useEffect, useState } from "react";
+import React, { Component } from "react";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const client = new W3CWebSocket("ws://127.0.0.1:8000");
@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "a",
+      text: "",
       user: null,
       users: [],
       userSubmitted: false,
@@ -67,9 +67,9 @@ class App extends Component {
               {this.state.text}
             </textarea>
           </div>
-          {this.users?.map((user) => {
-            <p>{user}</p>;
-          })}
+          {this.state.users.map((user) => (
+            <p>{user}</p>
+          ))}
         </div>
       );
     } else {
